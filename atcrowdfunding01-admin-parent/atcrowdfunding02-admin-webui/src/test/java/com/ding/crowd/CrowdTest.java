@@ -40,7 +40,7 @@ public class CrowdTest {
     public void testTx() {
         Admin admin = new Admin(null, "jerry", "123456", "杰瑞", "jerry@qq.com", null);
         adminService.saveAdmin(admin);
-
+        throw new RuntimeException();
     }
 
     @Test

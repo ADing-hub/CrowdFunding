@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
+         version="4.0">
+
+    <!-- 加载Sping配置文件-->
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>classpath:Spring-persist-mybatis.xml</param-value>
+    </context-param>
+
+   <listener>
+       <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+   </listener>
+
+    <servlet>
+        <servlet-name>dispatcherServlet</servlet-name>
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+        <init-param>
+            <param-name>contextConfigLocation</param-name>
+            <param-value>classpath:Spring-persist-mybatis.xml</param-value>
+        </init-param>
+        <!-- Servlet默认生命周期中，创建对象时在第一次接受到请求的时候-->
+        <!-- 而DispatcherServlet 创建对象后有大量的“框架初始化”工作，不适合在第一次请求时做-->
+        <!-- 设置load-on-startup 就是为了让DispatcherServlet在web应用启动时创建对象、初始化-->
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>dispatcherServlet</servlet-name>
+        <!-- Url-pattern配置方式一：/ 表示拦截所有请求-->
+        <!--<url-pattern>/</url-pattern>-->
+
+        <!-- url-pattern配置方式二：配置请求扩展名-->
+        <!-- 优点1：xx.css、xx.js、xx.png 等静态资源完全不经过SpringMVC。不需要特殊处理-->
+        <!-- 优点2：可以实现伪静态效果-->
+
+        <url-pattern>*.html</url-pattern>
+        <!-- 如果一个Ajax请求扩展名时html，但是实际服务器给浏览器返回的json数据，就不匹配了，会报406，为了让Ajac能够顺利拿到Json数据，所以要配json-->
+        <url-pattern>*.json</url-pattern>
+
+    </servlet-mapping>
+
+    <filter>
+       <filter-name>CharacterEncodingFilter</filter-name>
+       <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+       <!-- 指定字符集-->
+       <init-param>
+           <param-name>encoding</param-name>
+           <param-value>UTF-8</param-value>
+       </init-param>
+       <!-- 强制请求设置字符集-->
+       <init-param>
+           <param-name>forceRequestEncoding</param-name>
+           <param-value>true</param-value>
+       </init-param>
+       <!-- 强制响应设置字符集-->
+       <init-param>
+           <param-name>forceResponseEncoding</param-name>
+           <param-value>true</param-value>
+       </init-param>
+   </filter>
+    <!-- 这个Filter执行顺序要在所有其它Filter前面-->
+    <filter-mapping>
+        <filter-name>CharacterEncodingFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+
+
+
+
+
+
+
+</web-app>

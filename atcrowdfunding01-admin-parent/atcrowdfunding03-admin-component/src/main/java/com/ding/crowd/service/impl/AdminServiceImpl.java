@@ -22,7 +22,7 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public void saveAdmin(Admin admin) {
-        int insert = adminMapper.insert(admin);
+        adminMapper.insert(admin);
     }
 
 }

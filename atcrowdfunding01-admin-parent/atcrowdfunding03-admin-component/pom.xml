@@ -83,6 +83,12 @@
             <artifactId>jackson-databind</artifactId>
         </dependency>
 
+        <!-- servlet-api-->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <version>2.5</version>
+        </dependency>
         <!-- JSTL 标签库 -->
         <dependency>
             <groupId>javax.servlet.jsp.jstl</groupId>

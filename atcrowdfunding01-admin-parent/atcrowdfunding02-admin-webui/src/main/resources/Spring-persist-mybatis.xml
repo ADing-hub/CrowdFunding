@@ -3,10 +3,19 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
        xmlns:aop="http://www.springframework.org/schema/aop"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd http://www.springframework.org/schema/aop https://www.springframework.org/schema/aop/spring-aop.xsd">
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       https://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/tx
+       http://www.springframework.org/schema/tx/spring-tx.xsd
+       http://www.springframework.org/schema/aop
+       https://www.springframework.org/schema/aop/spring-aop.xsd">
 
     <!-- 加载jdbc配置文件-->
     <context:property-placeholder location="classpath:jdbc.properties"/>
+    <!-- 配置自动扫描的包：主要是为了把Service扫描到IOC容器中-->
+    <context:component-scan base-package="com.ding.crowd.service"/>
 
     <!-- 配置数据源-->
     <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource">
@@ -32,15 +41,21 @@
     </bean>
 
 
-
-    <!-- 配置自动扫描的包：主要是为了把Service扫描到IOC容器中-->
-    <context:component-scan base-package="com.ding.crowd.service"/>
-
     <!-- 配置事物管理器-->
     <bean id="dataSourceTransactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
         <!-- 装配数据源-->
         <property name="dataSource" ref="dataSource"/>
     </bean>
+
+
+
+    <!-- 配置事务切面-->
+    <aop:config>
+        <!-- 考虑到后期整合SpringSecurity，避免把UserDetailsService加入事务控制，让切入点表达式定位到Service-->
+        <aop:pointcut id="pointcut" expression="execution(* *..*ServiceImpl.*(..))"/>
+        <!-- 将切入点表达式和事务通知关联起来-->
+        <aop:advisor advice-ref="advice" pointcut-ref="pointcut"/>
+    </aop:config>
 
     <!-- 配置事物通知-->
     <tx:advice id="advice" transaction-manager="dataSourceTransactionManager">
@@ -63,21 +78,11 @@
                         默认：运行时回滚
                         建议：编译时异常和运行时异常都回滚
             -->
-            <tx:method name="save" propagation="REQUIRES_NEW" rollback-for="java.lang.Exception"/>
-            <tx:method name="update" propagation="REQUIRES_NEW" rollback-for="java.lang.Exception"/>
-            <tx:method name="remove" propagation="REQUIRES_NEW" rollback-for="java.lang.Exception"/>
-            <tx:method name="batch" propagation="REQUIRES_NEW" rollback-for="java.lang.Exception"/>
+            <tx:method name="save*" propagation="REQUIRES_NEW" rollback-for="java.lang.Exception"/>
+            <tx:method name="update*" propagation="REQUIRES_NEW" rollback-for="java.lang.Exception"/>
+            <tx:method name="remove*" propagation="REQUIRES_NEW" rollback-for="java.lang.Exception"/>
+            <tx:method name="batch*" propagation="REQUIRES_NEW" rollback-for="java.lang.Exception"/>
         </tx:attributes>
     </tx:advice>
-
-    <!-- 配置事务切面-->
-    <aop:config>
-        <!-- 考虑到后期整合SpringSecurity，避免把UserDetailsService加入事务控制，让切入点表达式定位到Service-->
-        <aop:pointcut id="pointcut" expression="execution(* *..*ServiceImpl.*(..))"/>
-        <!-- 将切入点表达式和事务通知关联起来-->
-        <aop:advisor advice-ref="advice" pointcut-ref="pointcut"/>
-    </aop:config>
-
-
 
 </beans>
