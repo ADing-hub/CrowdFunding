@@ -2,6 +2,7 @@ package com.ding.crowd;
 
 import com.ding.crowd.entity.Admin;
 import com.ding.crowd.mapper.AdminMapper;
+import com.ding.crowd.service.api.AdminService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -31,7 +32,16 @@ public class CrowdTest {
     private DataSource dataSource;
     @Autowired
     private AdminMapper adminMapper;
+    @Autowired
+    private AdminService adminService;
 
+
+    @Test
+    public void testTx() {
+        Admin admin = new Admin(null, "jerry", "123456", "杰瑞", "jerry@qq.com", null);
+        adminService.saveAdmin(admin);
+
+    }
 
     @Test
     public void testLog() {
