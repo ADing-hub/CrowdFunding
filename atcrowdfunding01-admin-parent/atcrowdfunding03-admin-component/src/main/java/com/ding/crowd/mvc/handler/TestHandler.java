@@ -68,8 +68,7 @@ public class TestHandler {
         logger.info("是否Ajax：" + b);
         List<Admin> adminList = adminService.getAll();
         model.addAttribute("adminlist",adminList);
-        String a = null;
-        System.out.println(a.length());
+        int i = 10 / 0;
         return "target";
     }
 }

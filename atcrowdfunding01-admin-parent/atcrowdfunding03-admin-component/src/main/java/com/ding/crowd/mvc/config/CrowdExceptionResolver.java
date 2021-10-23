@@ -1,8 +1,9 @@
 package com.ding.crowd.mvc.config;
 
-import com.ding.crowd.util.CrowdContant;
+import com.ding.crowd.constant.CrowdContant;
 import com.ding.crowd.util.CrowdUtil;
 import com.ding.crowd.util.ResultEntity;
+import com.ding.crowd.util.exception.LoginFailedException;
 import com.google.gson.Gson;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -23,6 +24,19 @@ import java.io.IOException;
 @ControllerAdvice
 public class CrowdExceptionResolver {
 
+    /**
+     *
+     * @param exception 实际捕获的异常类型
+     * @param request 当前请求对象
+     * @param response 当前相应请求
+     * @return 返回页面
+     * @ExceptionHandler：将一个具体的异常类型和一个方法关联起来
+     */
+    @ExceptionHandler(value = LoginFailedException.class)
+    public ModelAndView resolveMathException(LoginFailedException exception, HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String viewName = "admin-login";
+        return commonResolve(viewName, exception, request, response);
+    }
 
     /**
      *
@@ -54,7 +68,7 @@ public class CrowdExceptionResolver {
 
     /**
      * 抽取的公共方法
-     * @param viewName 转发的错误页
+     * @param viewName 转发的页面
      * @param e 捕获的异常
      * @param request 当前请求的对象
      * @param response 当前响应的对象

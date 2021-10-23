@@ -1,7 +1,8 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <head>
-    <base href="http://${pageContext.request.serverName }:${pageContext.request.serverPort }${pageContext.request.contextPath }/"/>
+    <base href="http://${pageContext.request.serverName }:${pageContext.request.serverPort }/"/>
     <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+    <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
     <link rel="stylesheet" href="css/font-awesome.min.css">
     <link rel="stylesheet" href="css/main-fireNay.css">
     <style>

@@ -28,4 +28,29 @@
             </props>
         </property>
     </bean>
+
+    <!-- 配置View-controller，直接把请求地址和视图名称关联起来，不必写handler方法了-->
+    <!--
+        @RequestMapping("/admin/do/admin-login.jsp")
+        public String adminLogin(){
+            return “admin-login”;
+        }
+    -->
+    <mvc:view-controller path="admin/do/login.html" view-name="admin-login"/>
+    <mvc:view-controller path="admin/to/main.html" view-name="admin-main"/>
+    <mvc:view-controller path="admin/to/add/page.html" view-name="admin-add"></mvc:view-controller>
+    <mvc:view-controller path="role/to/page.html" view-name="role-page"></mvc:view-controller>
+    <mvc:view-controller path="menu/to/page.html" view-name="menu-page"></mvc:view-controller>
+    <mvc:view-controller path="admin/get/page.html" view-name="admin-page"/>
+
+    <!-- 注册拦截器-->
+    <mvc:interceptors>
+        <mvc:interceptor>
+            <mvc:mapping path="/**"/>
+            <mvc:exclude-mapping path="/admin/do/login.html"/>
+            <mvc:exclude-mapping path="/admin/do/doLogin.html"/>
+            <mvc:exclude-mapping path="/admin/do/logout.html"/>
+            <bean class="com.ding.crowd.mvc.interceptor.LoginInterceptor"/>
+        </mvc:interceptor>
+    </mvc:interceptors>
 </beans>

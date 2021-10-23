@@ -5,9 +5,9 @@
 </head>
 <base href="http://${pageContext.request.serverName }:${pageContext.request.serverPort }/"/>
 <script src="jquery/jquery-2.1.1.min.js" type="text/javascript"></script>
+<script type="text/javascript" src="layer/layer.js"></script>
 <script type="text/javascript">
   $(function () {
-
     //btn1
     //此方式可以在浏览器看到发送的请求体是Form Data(表单数据)
     $("#btn1").click(function () {
@@ -118,7 +118,7 @@
           "key2":"value2"
         }
       };   //student end
-      var studentStr = JSON.stringify(student);
+       var studentStr = JSON.stringify(student);
       $.ajax({
         url: "send/object.json",    //此时是json，表示返回的数据是json格式的
         type: "post",
@@ -135,7 +135,13 @@
 
     });
     //btn4
+
+    $("#btn5").click(function () {
+      layer.msg("test layer");
+      return false;
+    });
   });
+
 </script>
 <body>
 <center>
@@ -149,6 +155,8 @@
   <button id="btn3">Test Compose Object</button>
   <br/><br/>
   <button id="btn4">Test ResultEntity</button>
+
+  <button id="btn5">Test layer</button>
 </center>
 </body>
 </html>

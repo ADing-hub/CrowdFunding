@@ -35,6 +35,13 @@ public class CrowdTest {
     @Autowired
     private AdminService adminService;
 
+    @Test
+    public void test() {
+        for (int i = 1; i < 232; i++) {
+            Admin admin = new Admin(null, "jerry"+i, "userPwd"+i, "userName"+i, "email"+i, null);
+            adminService.saveAdmin(admin);
+        }
+    }
 
     @Test
     public void testTx() {

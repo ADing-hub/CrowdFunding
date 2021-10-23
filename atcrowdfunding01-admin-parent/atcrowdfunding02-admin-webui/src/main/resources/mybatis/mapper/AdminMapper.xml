@@ -70,6 +70,17 @@
   <sql id="Base_Column_List">
     id, login_acct, user_pswd, user_name, email, create_time
   </sql>
+  <!--查找符合关键字匹配的数据（没有关键字则默认查找全部数据）-->
+  <select id="selectAdminByKeyword" resultMap="BaseResultMap">
+    select
+    <!--引入前面的sql标签中的内容-->
+    <include refid="Base_Column_List"/>
+    from t_admin
+    where
+    login_acct like CONCAT("%",#{keyword},"%") or
+    user_name like CONCAT("%",#{keyword},"%") or
+    email like CONCAT("%",#{keyword},"%")
+  </select>
   <select id="selectByExample" parameterType="com.ding.crowd.entity.AdminExample" resultMap="BaseResultMap">
     select
     <if test="distinct">
