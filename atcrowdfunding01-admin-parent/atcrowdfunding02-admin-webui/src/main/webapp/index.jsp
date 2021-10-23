@@ -140,7 +140,7 @@
 <body>
 <center>
 
-  <a href="/test/ssm.html">测试SSM整合环境</a>
+  <a href="/test/ssm.html">测试SSM整合环境</a><br/><br/>
 
   <button id="btn1">Test Ajax One</button>
   <br/><br/>

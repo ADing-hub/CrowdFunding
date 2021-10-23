@@ -1,10 +1,8 @@
 package com.ding.crowd.util;
 
-import com.sun.jndi.dns.DnsUrl;
-
 /**
  * @author Qidong Ding
- * @description TODO：
+ * @description TODO：统一请求返回结果
  * @date 2021-10-22-22:02
  * @since JDK 1.8
  *

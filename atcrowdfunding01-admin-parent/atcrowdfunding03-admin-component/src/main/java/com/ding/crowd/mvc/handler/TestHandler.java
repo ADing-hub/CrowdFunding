@@ -3,6 +3,7 @@ package com.ding.crowd.mvc.handler;
 import com.ding.crowd.entity.Admin;
 import com.ding.crowd.entity.Student;
 import com.ding.crowd.service.api.AdminService;
+import com.ding.crowd.util.CrowdUtil;
 import com.ding.crowd.util.ResultEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -51,7 +53,9 @@ public class TestHandler {
 
     @ResponseBody
     @RequestMapping("/send/object.json")
-    public ResultEntity<Student> testReceiveComposeObject(@RequestBody Student student){
+    public ResultEntity<Student> testReceiveComposeObject(@RequestBody Student student,HttpServletRequest request){
+        boolean b = CrowdUtil.judgeRequestType(request);
+        logger.info("是否Ajax：" + b);
         logger.info(student.toString());
         // 将查询到的student对象封装到ResultEntity返回
         ResultEntity<Student> studentResultEntity = ResultEntity.successWithData(student);
@@ -59,11 +63,13 @@ public class TestHandler {
     }
 
     @RequestMapping("/test/ssm.html")
-    public String testSsm(Model model) {
-
+    public String testSsm(Model model, HttpServletRequest request) {
+        boolean b = CrowdUtil.judgeRequestType(request);
+        logger.info("是否Ajax：" + b);
         List<Admin> adminList = adminService.getAll();
-        model.addAttribute("adminlist", adminList);
-        int i= 10 / 0;
+        model.addAttribute("adminlist",adminList);
+        String a = null;
+        System.out.println(a.length());
         return "target";
     }
 }
