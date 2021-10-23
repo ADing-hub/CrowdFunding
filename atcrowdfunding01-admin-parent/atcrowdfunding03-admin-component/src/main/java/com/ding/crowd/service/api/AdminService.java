@@ -2,6 +2,8 @@ package com.ding.crowd.service.api;
 
 import com.ding.crowd.entity.Admin;
 
+import java.util.List;
+
 /**
  * @author Qidong Ding
  * @description TODO：
@@ -12,4 +14,6 @@ import com.ding.crowd.entity.Admin;
 public interface AdminService {
 
     void saveAdmin(Admin admin);
+
+    List<Admin> getAll();
 }
