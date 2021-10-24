@@ -15,7 +15,7 @@
             <div class="panel panel-default">
                 <div class="panel-heading">表单数据<div style="float:right;cursor:pointer;" data-toggle="modal" data-target="#myModal"><i class="glyphicon glyphicon-question-sign"></i></div></div>
                 <div class="panel-body">
-                    <form action="admin/updateAdmin.html" method="post" role="form">
+                    <form action="/admin/update.html" method="post" role="form">
                         <input type="hidden" name="id" value="${requestScope.admin.id}">
                         <input type="hidden" name="pageNum" value="${param.pageNum}">
                         <input type="hidden" name="keyword" value="${param.keyword}">

@@ -3,6 +3,9 @@ package com.ding.crowd.mvc.config;
 import com.ding.crowd.constant.CrowdContant;
 import com.ding.crowd.util.CrowdUtil;
 import com.ding.crowd.util.ResultEntity;
+import com.ding.crowd.util.exception.AccessForbiddenException;
+import com.ding.crowd.util.exception.LoginAcctAlreadyInUserException;
+import com.ding.crowd.util.exception.LoginAcctAlreadyInUserForUpdateException;
 import com.ding.crowd.util.exception.LoginFailedException;
 import com.google.gson.Gson;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -25,7 +28,49 @@ import java.io.IOException;
 public class CrowdExceptionResolver {
 
     /**
-     *
+     * 帐号修改异常
+     * @param exception 实际捕获的异常类型
+     * @param request 当前请求对象
+     * @param response 当前相应请求
+     * @return 返回页面
+     * @ExceptionHandler：将一个具体的异常类型和一个方法关联起来
+     */
+    @ExceptionHandler(value = LoginAcctAlreadyInUserForUpdateException.class)
+    public ModelAndView LoginAcctAlreadyInUserForUpdateException(LoginAcctAlreadyInUserForUpdateException exception, HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String viewName = "system-error";
+        return commonResolve(viewName, exception, request, response);
+    }
+
+    /**
+     * 帐号添加异常
+     * @param exception 实际捕获的异常类型
+     * @param request 当前请求对象
+     * @param response 当前相应请求
+     * @return 返回页面
+     * @ExceptionHandler：将一个具体的异常类型和一个方法关联起来
+     */
+    @ExceptionHandler(value = LoginAcctAlreadyInUserException.class)
+    public ModelAndView LoginAcctAlreadyInUserException(LoginAcctAlreadyInUserException exception, HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String viewName = "admin-add";
+        return commonResolve(viewName, exception, request, response);
+    }
+
+    /**
+     * 登录异常
+     * @param exception 实际捕获的异常类型
+     * @param request 当前请求对象
+     * @param response 当前相应请求
+     * @return 返回页面
+     * @ExceptionHandler：将一个具体的异常类型和一个方法关联起来
+     */
+    @ExceptionHandler(value = AccessForbiddenException.class)
+    public ModelAndView AccessForbiddenException(AccessForbiddenException exception, HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String viewName = "admin-login";
+        return commonResolve(viewName, exception, request, response);
+    }
+
+    /**
+     * 登录异常
      * @param exception 实际捕获的异常类型
      * @param request 当前请求对象
      * @param response 当前相应请求
@@ -39,7 +84,7 @@ public class CrowdExceptionResolver {
     }
 
     /**
-     *
+     * 算术异常
      * @param exception 实际捕获的异常类型
      * @param request 当前请求对象
      * @param response 当前相应请求
@@ -53,7 +98,7 @@ public class CrowdExceptionResolver {
     }
 
     /**
-     *
+     * 空指针异常
      * @param exception 实际捕获的异常类型
      * @param request 当前请求对象
      * @param response 当前相应请求

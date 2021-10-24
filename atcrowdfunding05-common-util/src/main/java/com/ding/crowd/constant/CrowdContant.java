@@ -18,6 +18,6 @@ public class CrowdContant {
     public static final String MESSAGE_ACCESS_FORBIDDEN = "请先登录！";
     public static final String MESSAGE_STRING_INVALIDATE = "字符串不合法";
     public static final String MESSAGE_SYSTEM_ERROR_LOGIN_NOT_UNIQUE = "系统错误，登录帐号不唯一";
-    public static final String ATTR_NAME_LOGI_ADMIN = "admin";
+    public static final String ATTR_NAME_LOGIN_ADMIN = "admin";
     public static final String ATTR_NAME_PAGE_INFO = "pageInfo";
 }

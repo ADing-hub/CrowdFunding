@@ -32,7 +32,7 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
         // 1、通过request对象获取Session对象
         HttpSession session = request.getSession();
         // 2、尝试从Session中获取admin对象
-        Admin admin = (Admin) session.getAttribute(CrowdContant.ATTR_NAME_LOGI_ADMIN);
+        Admin admin = (Admin) session.getAttribute(CrowdContant.ATTR_NAME_LOGIN_ADMIN);
         // 3、判断admin对象是否为null
         if (admin == null) {
             // 4、抛出异常

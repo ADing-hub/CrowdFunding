@@ -15,7 +15,7 @@
             <div class="panel panel-default">
                 <div class="panel-heading">表单数据<div style="float:right;cursor:pointer;" data-toggle="modal" data-target="#myModal"><i class="glyphicon glyphicon-question-sign"></i></div></div>
                 <div class="panel-body">
-                    <form action="admin/save.html" method="post" role="form">
+                    <form action="/admin/save.html" method="post" role="form">
                         <p><font color="red">${requestScope.exception.message}</font></p>
                         <div class="form-group">
                             <label for="exampleInputLoginAcct1">登录账号</label>

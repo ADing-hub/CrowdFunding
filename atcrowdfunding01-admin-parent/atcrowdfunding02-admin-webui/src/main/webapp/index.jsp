@@ -156,7 +156,9 @@
   <br/><br/>
   <button id="btn4">Test ResultEntity</button>
 
-  <button id="btn5">Test layer</button>
+  <button id="btn5">Test layer</button><br/><br/>
+
+  <a href="/admin/do/login.html">登录</a><br/><br/>
 </center>
 </body>
 </html>

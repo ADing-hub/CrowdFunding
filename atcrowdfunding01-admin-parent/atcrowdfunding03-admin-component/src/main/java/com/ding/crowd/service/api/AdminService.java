@@ -14,6 +14,10 @@ import java.util.List;
 
 public interface AdminService {
 
+    /**
+     * 保存admin对象
+     * @param admin admin对象
+     */
     void saveAdmin(Admin admin);
 
     List<Admin> getAll();
@@ -34,4 +38,23 @@ public interface AdminService {
      * @return
      */
     PageInfo<Admin> getPageInfo(String keyword, Integer pageNum, Integer pageSize);
+
+    /**
+     * 删除用户
+     * @param adminId 用户Id
+     */
+    void remove(Integer adminId);
+
+    /**
+     * 根据adminId查询admin对象
+     * @param adminId adminid
+     * @return
+     */
+    Admin getAdminById(Integer adminId);
+
+    /**
+     * 更新admin对象
+     * @param admin admin对象
+     */
+    void update(Admin admin);
 }
