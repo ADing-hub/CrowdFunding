@@ -30,9 +30,16 @@ public class TestHandler {
 
     private static Logger logger = LoggerFactory.getLogger(TestHandler.class);
 
+    @ResponseBody
+    @RequestMapping("/test/ajax/async.html")
+    public String testAsync() throws InterruptedException {
+        Thread.sleep(2000);
+        return "success";
+    }
 
     @Autowired
     private AdminService adminService;
+
 
     @ResponseBody
     @RequestMapping("/send/one.html")

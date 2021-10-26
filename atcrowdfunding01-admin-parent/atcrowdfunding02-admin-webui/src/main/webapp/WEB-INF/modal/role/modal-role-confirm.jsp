@@ -11,7 +11,7 @@
             </div>
             <div class="modal-body">
                 <h4>请确认是否要删除下列的角色：</h4>
-                <div id="roleNameDiv" style="text-align: center"></div>
+                <div id="confirmList" style="text-align: center"></div>
             </div>
             <div class="modal-footer">
                 <button id="removeRoleBtn" type="button" class="btn btn-danger">删除</button>

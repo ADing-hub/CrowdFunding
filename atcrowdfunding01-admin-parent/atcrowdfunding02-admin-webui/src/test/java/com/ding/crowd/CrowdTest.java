@@ -1,7 +1,9 @@
 package com.ding.crowd;
 
 import com.ding.crowd.entity.Admin;
+import com.ding.crowd.entity.Role;
 import com.ding.crowd.mapper.AdminMapper;
+import com.ding.crowd.mapper.RoleMapper;
 import com.ding.crowd.service.api.AdminService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -34,6 +36,16 @@ public class CrowdTest {
     private AdminMapper adminMapper;
     @Autowired
     private AdminService adminService;
+    @Autowired
+    private RoleMapper roleMapper;
+
+    @Test
+    public void testRoleSave() {
+        for (int i = 1; i < 232; i++) {
+            Role role = new Role(null, "role" + i);
+            roleMapper.insert(role);
+        }
+    }
 
     @Test
     public void test() {
