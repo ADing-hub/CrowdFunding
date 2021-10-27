@@ -3,6 +3,7 @@ package com.ding.crowd.service.impl;
 import com.ding.crowd.constant.CrowdContant;
 import com.ding.crowd.entity.Admin;
 import com.ding.crowd.entity.AdminExample;
+import com.ding.crowd.entity.Role;
 import com.ding.crowd.mapper.AdminMapper;
 import com.ding.crowd.service.api.AdminService;
 import com.ding.crowd.util.CrowdUtil;
@@ -162,5 +163,13 @@ public class AdminServiceImpl implements AdminService {
             }
         }
 
+    }
+
+    @Override
+    public void saveAdminRoleRlationship(Integer adminId, List<Integer> roleIdList) {
+        adminMapper.deleteOldRelationship(adminId);
+        if (roleIdList != null && roleIdList.size() > 0) {
+            adminMapper.saveNewRelationship(adminId,roleIdList);
+        }
     }
 }

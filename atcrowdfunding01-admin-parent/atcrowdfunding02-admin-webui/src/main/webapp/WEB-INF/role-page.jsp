@@ -6,6 +6,8 @@
 <link href="css/pagination.css" rel="stylesheet" />
 <%--引入基于jquery的paginationjs--%>
 <script type="text/javascript" src="jquery/jquery.pagination.js"></script>
+<link rel="stylesheet" href="ztree/zTreeStyle.css"/>
+<script type="text/javascript" src="ztree/jquery.ztree.all-3.5.min.js"></script>
 <script type="text/javascript" src="/layer/layer.js"></script>
 <script type="text/javascript" src="crowd/my-role.js" charset="UTF-8"></script>
 <script type="text/javascript">
@@ -215,6 +217,63 @@
             // 调用显示模态框函数，传入roleArray
             showConfirmModal(roleArray);
 
+        });
+        // 给分配权限的按钮添加单击响应函数，打开分配模态框
+        $("#rolePageTBody").on("click",".checkBtn",function () {
+
+            // 将当前按钮的id放入全局变量
+            window.roleId = this.id;
+            // 打开模态框
+            $("#assignModal").modal("show");
+            // 生成权限信息
+            generateAuthTree();
+        });
+
+        // 给分配权限的模态框中的提交按钮设置单击响应函数
+        $("#assignBtn").click(function () {
+            // 声明一个数组，用来存放被勾选的auth的id
+            var authIdArray = [];
+
+            // 拿到zTreeObj
+            var zTreeObj = $.fn.zTree.getZTreeObj("authTreeDemo");
+
+            // 通过getCheckedNodes方法拿到被选中的option信息
+            var authArray = zTreeObj.getCheckedNodes();
+
+            for (var i = 0; i < authArray.length; i++) {
+                // 从被选中的auth中遍历得到每一个auth的id
+                var authId = authArray[i].id;
+                // 通过push方法将得到的id存入authIdArray
+                authIdArray.push(authId);
+            }
+            var requestBody = {
+                // 为了后端取值方便，两个数据都用数组格式存放，后端统一用List<Integer>获取
+                "roleId":[window.roleId],
+                "authIdList":authIdArray
+            }
+            requestBody = JSON.stringify(requestBody);
+
+            $.ajax({
+                url: "assign/do/save/role/auth/relationship.json",
+                type: "post",
+                data: requestBody,
+                contentType: "application/json;charset=UTF-8",
+                dataType: "json",
+                success: function (response) {
+                    if (response.result == "SUCCESS"){
+                        layer.msg("操作成功！");
+                    }
+                    if (response.result == "FAILED"){
+                        layer.msg("操作失败！提示信息："+ response.message);
+                    }
+                },
+                error: function (response) {
+                    layer.msg(response.status + "  " + response.statusText);
+                }
+            });
+
+            // 关闭模态框
+            $("#assignModal").modal("hide");
         });
 
     });

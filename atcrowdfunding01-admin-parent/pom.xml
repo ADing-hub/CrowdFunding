@@ -12,6 +12,8 @@
         <module>atcrowdfunding02-admin-webui</module>
         <module>atcrowdfunding03-admin-component</module>
         <module>atcrowdfunding04-admin-entity</module>
+        <module>pro01-spring-annotation</module>
+        <module>pro02-srping-security</module>
     </modules>
 
     <properties>

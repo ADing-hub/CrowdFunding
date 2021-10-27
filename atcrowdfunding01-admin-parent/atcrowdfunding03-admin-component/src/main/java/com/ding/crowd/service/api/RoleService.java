@@ -40,4 +40,8 @@ public interface RoleService {
      * @param roleList 批量数组
      */
     void removeRole(List<Integer> roleList);
+
+    List<Role> getAssignedRole(Integer adminId);
+
+    List<Role> getUnAssignedRole(Integer adminId);
 }

@@ -70,6 +70,20 @@
   <sql id="Base_Column_List">
     id, login_acct, user_pswd, user_name, email, create_time
   </sql>
+
+  <!-- 清除inner_admin_role表中对应adminId的旧数据 -->
+  <delete id="deleteOldRelationship">
+    delete from inner_admin_role
+    where admin_id = #{adminId}
+  </delete>
+
+  <!-- 向inner_admin_role表中插入关系（借助foreach标签） -->
+  <insert id="saveNewRelationship">
+    insert into inner_admin_role(admin_id, role_id) values
+    <foreach collection="roleIdList" item="roleId" separator=",">
+      (#{adminId},#{roleId})
+    </foreach>
+  </insert>
   <!--查找符合关键字匹配的数据（没有关键字则默认查找全部数据）-->
   <select id="selectAdminByKeyword" resultMap="BaseResultMap">
     select

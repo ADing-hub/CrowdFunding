@@ -1,4 +1,102 @@
+// 生成权限信息的树形结构
+function generateAuthTree(){
 
+    var ajaxReturn = $.ajax({
+        url: "assign/get/tree.json",
+        type: "post",
+        async: false,
+        dataType: "json"
+    });
+
+    if (ajaxReturn.status != 200){
+        layer.msg("请求出错！错误码："+ ajaxReturn.status + "错误信息：" + ajaxReturn.statusText);
+        return ;
+    }
+
+    var resultEntity = ajaxReturn.responseJSON;
+
+    if (resultEntity.result == "FAILED"){
+        layer.msg("操作失败！"+resultEntity.message);
+    }
+
+    if (resultEntity.result == "SUCCESS"){
+        var authList = resultEntity.data;
+        // 将服务端查询到的list交给zTree自己组装
+        var setting = {
+            data: {
+                // 开启简单JSON功能
+                simpleData: {
+                    enable: true,
+                    // 通过pIdKey属性设置父节点的属性名，而不使用默认的pId
+                    pIdKey: "categoryId"
+                },
+                key: {
+                    // 设置在前端显示的节点名是查询到的title，而不是使用默认的name
+                    name:"title"
+                },
+            },
+
+            check: {
+                enable:true
+            }
+        };
+
+        // 生成树形结构信息
+        $.fn.zTree.init($("#authTreeDemo"), setting, authList);
+
+        // 设置节点默认是展开的
+        // 1 得到zTreeObj
+        var zTreeObj = $.fn.zTree.getZTreeObj("authTreeDemo");
+        // 2 设置默认展开
+        zTreeObj.expandAll(true);
+
+        // 勾选后端查出的匹配的权限
+        ajaxReturn = $.ajax({
+            url: "assign/get/checked/auth/id.json",
+            type: "post",
+            dataType: "json",
+            async: false,
+            data:{
+                "roleId":window.roleId
+            }
+        });
+
+        if (ajaxReturn.status != 200){
+            layer.msg("请求出错！错误码："+ ajaxReturn.status + "错误信息：" + ajaxReturn.statusText);
+            return ;
+        }
+
+        resultEntity = ajaxReturn.responseJSON;
+
+        if (resultEntity.result == "FAILED"){
+            layer.msg("操作失败！"+resultEntity.message);
+        }
+
+        if (resultEntity.result == "SUCCESS"){
+            var authIdArray = resultEntity.data;
+
+            // 遍历得到的autoId的数组
+            // 根据authIdArray勾选对应的节点
+            for (var i = 0; i < authIdArray.length; i++){
+                var authId = authIdArray[i];
+
+                // 通过id得到treeNode
+                var treeNode = zTreeObj.getNodeByParam("id",authId);
+
+                // checked设置为true，表示勾选节点
+                var checked = true;
+
+                // checkTypeFlag设置为false，表示不联动勾选，
+                // 即父节点的子节点未完全勾选时不改变父节点的勾选状态
+                var checkTypeFlag = false;
+
+                // 执行勾选操作
+                zTreeObj.checkNode(treeNode,checked,checkTypeFlag);
+            }
+        }
+
+    }
+}
 // 打开确认删除的模态框
 function showConfirmModal(roleArray){
     // 显示模态框
@@ -101,7 +199,7 @@ function fillTableBody(pageInfo){
         var checkboxTd = "<td><input type='checkbox' id='"+roleId+"' class='itemBox'/></td>";
         var roleNameTd = "<td>" + roleName + "</td>";
 
-        var checkBtn = "<button type='button' class='btn btn-success btn-xs'><i class=' glyphicon glyphicon-check'></i></button>"
+        var checkBtn = "<button type='button' id='"+roleId+"' class='btn btn-success btn-xs checkBtn'><i class=' glyphicon glyphicon-check'></i></button>"
 
         var pencilBtn = "<button id='"+roleId+"' type='button' class='btn btn-primary btn-xs pencilBtn'><i class=' glyphicon glyphicon-pencil'></i></button>"
 

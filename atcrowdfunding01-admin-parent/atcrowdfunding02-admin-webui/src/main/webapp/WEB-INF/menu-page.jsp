@@ -7,7 +7,7 @@
 
     $(function () {
 
-        generateTree();
+        generateTree()
         // 添加-打开模态框
         $("#treeDemo").on("click",".addBtn",function () {
             $("#menuAddModal").modal("show");
@@ -15,27 +15,35 @@
             window.id = this.id;
             return false;
         });
-        // 更新-打开模态框
+        // 动态生成的修改按钮，单击打开修改的模态框
         $("#treeDemo").on("click",".editBtn",function () {
-            // 后面依据这个id进行赋值
+
+            // 保存此按钮的id
             window.id = this.id;
+
             $("#menuEditModal").modal("show");
-            // 获取zTreeObj
+
+            // 要实现通过id拿到整个节点的信息，需要拿到zTreeObj
             var zTreeObj = $.fn.zTree.getZTreeObj("treeDemo");
-            // 用户来搜的属性名 属性值
+
             var key = "id";
             var value = window.id;
-            // 利用zTreeAPI获取用户当前点击的节点值然后回显 [注意这里的 currentNode 值来自数据库]
-            var currentNode = zTreeObj.getNodeByParam(key, value);
+
+            // getNodeByParam，通过id得到当前的整个节点
+            // 注意：id为treeNode的id，返回的就是那个treeNode
+            var currentNode = zTreeObj.getNodeByParam(key,value);
+
             $("#menuEditModal [name=name]").val(currentNode.name);
+
             $("#menuEditModal [name=url]").val(currentNode.url);
-            // 找到icon这个name 根据currentNode的值就能进行回显
+            // 这里currentNode.icon其实是数组形式，利用这个值，放在[]中，传回val，就可以使相匹配的值回显在模态框中
             $("#menuEditModal [name=icon]").val([currentNode.icon]);
+
             return false;
         });
         // 保存
         $("#menuSaveBtn").click(function () {
-            // 手机表单中用户输入的数据
+            // 收集表单中用户输入的数据
             var name = $.trim($("#menuAddModal [name=name]").val());
             var url = $.trim($("#menuAddModal [name=url]").val());
             // 定位到被选中的那个
@@ -69,39 +77,45 @@
             $("#menuResetBtn").click();
         })
 
-
-        // 更新
+// 修改的模态框”修改按钮“的单击事件
         $("#menuEditBtn").click(function () {
-            var name = $("#menuEditModal [name=name]").val();
-            var url = $("#menuEditModal [name=url]").val();
-            // 定位到被选中的那个
+            var name = $.trim($("#menuEditModal [name=name]").val());
+
+            var url = $.trim($("#menuEditModal [name=url]").val());
+
             var icon = $("#menuEditModal [name=icon]:checked").val();
 
             $.ajax({
-                "url": "menu/update.json",
-                "type": "post",
-                "data": {
-                    "id": window.id,
-                    "name": name,
-                    "url": url,
-                    "icon": icon
+                url:"menu/edit.json",
+                type:"post",
+                "data":{
+                    "id":window.id,
+                    "name":name,
+                    "url":url,
+                    "icon":icon
                 },
-                "dataType": "json",
-                "success": function (response) {
-                    var result = response.result;
-                    if(result == "SUCCESS"){
-                        layer.msg(response.message);
+                dataType:"json",
+                success:function (response) {
+                    if(response.result == "SUCCESS"){
+                        layer.msg("操作成功！");
+
+                        // 重新生成树形结构
                         generateTree();
-                    }else{
-                        layer.msg(response.message);
+                    }
+                    if (response.result == "FAILED"){
+                        layer.msg("操作失败！");
                     }
                 },
-                "error": function (response) {
-                    layer.msg(response.status + " " + response.statusText)
+                error:function (response) {
+                    layer.msg(response.status + " " + response.statusText);
                 }
+
             });
+
+            // 关闭模态框
             $("#menuEditModal").modal("hide");
-        })
+
+        });
 
         // 给 x 绑定单机响应函数
         $("#treeDemo").on("click", ".removeBtn", function () {
@@ -118,33 +132,40 @@
             $("#removeNodeSpan").html("【<i class='" + currentNode.icon + "'></i>" + currentNode.name + "】");
             return false;
         })
-        // OK按钮的响应函数
+        // 确认模态框中，“确认”按钮的单击事件（发送Ajax请求）
         $("#confirmBtn").click(function () {
             $.ajax({
-                "url": "menu/remove.json",
-                "type": "post",
-                "data": {
-                    "id": window.id
+                url:"menu/remove.json",
+                type:"post",
+                "data":{
+                    // 只传入一个id
+                    "id":window.id,
                 },
-                "success": function (response) {
-                    var result = response.result;
-                    if(result == "SUCCESS"){
-                        layer.msg(response.message);
+                dataType:"json",
+                success:function (response) {
+                    if(response.result == "SUCCESS"){
+                        layer.msg("操作成功！");
+
+                        // 重新生成树形结构
                         generateTree();
-                    }else{
-                    	layer.msg("对不起！您无法对这个菜单进行更改！");
+                    }
+                    if (response.result == "FAILED"){
+                        layer.msg("操作失败！");
                     }
                 },
-                "error": function (response) {
-                    layer.msg(response.status + " " + response.statusText)
+                error:function (response) {
+                    layer.msg(response.status + " " + response.statusText);
                 }
-            })
+            });
+
             $("#menuConfirmModal").modal("hide");
-        })
+        });
+
     });
 
     // 生成树形结构
     function generateTree(){
+        console.log("11111")
         $.ajax({
             "url": "menu/get/whole/tree.json",
             "type": "post",

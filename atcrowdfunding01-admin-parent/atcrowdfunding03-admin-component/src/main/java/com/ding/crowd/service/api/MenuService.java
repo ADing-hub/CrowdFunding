@@ -15,4 +15,9 @@ public interface MenuService {
 
     List<Menu> getAll();
 
+    void save(Menu menu);
+
+    void update(Menu menu);
+
+    void remove(Integer id);
 }

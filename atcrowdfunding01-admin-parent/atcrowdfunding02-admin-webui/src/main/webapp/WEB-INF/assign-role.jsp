@@ -1,48 +1,53 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib prefix="firenay" uri="http://java.sun.com/jsp/jstl/core" %>
-<html>
-<%@include file="/WEB-INF/includex/include-head.jsp" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<!DOCTYPE html>
+<html lang="zh-CN">
+<%@include file="includex/include-head.jsp" %>
 <script type="text/javascript">
-
     $(function () {
-        $("#toRightBtn").click(function () {
-            // 找第一个select选择器; '>':表示找它的子元素 意思就是把第一个select中所有选中的元素追加到第二个select中
-            $("select:eq(0) > option:selected").appendTo("select:eq(1)");
+
+        // 给向右的按钮添加单击响应函数，将左边选中的添加到右边
+        $("#toRightBtn").click(function (){
+            $("select:eq(0)>option:selected").appendTo("select:eq(1)");
         });
-        $("#toLeftBtn").click(function () {
-            // 同理
-            $("select:eq(1) > option:selected").prependTo("select:eq(0)");
+        // 给向左的按钮添加单击响应函数，将右边选中的添加到左边
+        $("#toLeftBtn").click(function (){
+            $("select:eq(1)>option:selected").appendTo("select:eq(0)");
         });
-        // 提交的时候先全部选中
+
+        // 给提交按钮添加单击响应函数，使其在提交前，先全选“已分配角色列表”的选项，使提交时会提交全部
+        // 避免不提交之前存在的option的bug
         $("#submitBtn").click(function () {
-            $("select:eq(1) > option").prop("selected", "selected");
+            $("select:eq(1)>option").prop("selected","selected");
         });
-    })
+
+
+    });
 </script>
 <body>
-<%@include file="/WEB-INF/includex/include-nav.jsp" %>
+<%@include file="includex/include-nav.jsp" %>
 <div class="container-fluid">
     <div class="row">
-        <%@include file="/WEB-INF/includex/include-sidebar.jsp" %>
+        <%@include file="includex/include-sidebar.jsp" %>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
             <ol class="breadcrumb">
-                <li><a href="admin/to/main/page.html">首页</a></li>
-                <li><a href="admin/get/page.html">数据列表</a></li>
+                <li><a href="#">首页</a></li>
+                <li><a href="#">数据列表</a></li>
                 <li class="active">分配角色</li>
             </ol>
             <div class="panel panel-default">
                 <div class="panel-body">
-                    <form action="assign/do/role/assign.html" method="post" role="form" class="form-inline">
-                        <%--  这三个参数的值一直跟随 admin-page.jsp 页面的请求--%>
-                        <input type="hidden" name="adminId" value="${param.adminId}">
-                        <input type="hidden" name="pageNum" value="${param.pageNum}">
-                        <input type="hidden" name="keyword" value="${param.keyword}">
+                    <form action="assign/do/assign.html" method="post" role="form" class="form-inline">
+                        <!--隐藏域保存不会改变的adminId、pageNum、keyword，在提交时一起传给后端-->
+                        <input type="hidden" value="${param.adminId}" name="adminId"/>
+                        <input type="hidden" value="${param.pageNum}" name="pageNum"/>
+                        <input type="hidden" value="${param.keyword}" name="keyword"/>
                         <div class="form-group">
-                            <label for="selectUnAssignedRole">未分配角色列表</label><br>
+                            <label for="exampleInputPassword1">未分配角色列表</label><br>
                             <select class="form-control" multiple="multiple" size="10" style="width:100px;overflow-y:auto;">
-                                <firenay:forEach items="${requestScope.unAssignedRoles}" var="role">
-                                    <option value="${role.id }">${role.name }</option>
-                                </firenay:forEach>
+                                <c:forEach items="${requestScope.unAssignedRoleList}" var="role">
+                                    <option value="${role.id}">${role.name}</option>
+                                </c:forEach>
                             </select>
                         </div>
                         <div class="form-group">
@@ -53,20 +58,21 @@
                             </ul>
                         </div>
                         <div class="form-group" style="margin-left:40px;">
-                            <label for="selectAssignedRole">已分配角色列表</label><br>
-                            <%--  需要提交的数据 --%>
-                            <select name = "roleIds" class="form-control" multiple="multiple" size="10" style="width:100px;overflow-y:auto;">
-                                <firenay:forEach items="${requestScope.assignedRoles}" var="role">
-                                    <option value="${role.id }">${role.name }</option>
-                                </firenay:forEach>
+                            <label for="exampleInputPassword1">已分配角色列表</label><br>
+                            <!-- 被选中要分配的部分，name设置为roleIdList -->
+                            <select name="roleIdList" class="form-control" multiple="multiple" size="10" style="width:100px;overflow-y:auto;">
+                                <c:forEach items="${requestScope.assignedRoleList}" var="role">
+                                    <option value="${role.id}">${role.name}</option>
+                                </c:forEach>
                             </select>
                         </div>
-                        <button id="submitBtn" style="width: 100px;" type="submit" class="btn btn-lg btn-success btn-block">修改</button>
+                        <button id="submitBtn" type="submit" style="width:100px;margin-top: 20px;margin-left: 230px;" class="btn btn-sm btn-success btn-block">提交</button>
                     </form>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
 </body>
 </html>

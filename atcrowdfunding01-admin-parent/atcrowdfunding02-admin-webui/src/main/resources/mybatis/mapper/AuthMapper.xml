@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.ding.crowd.mapper.RoleMapper">
-  <resultMap id="BaseResultMap" type="com.ding.crowd.entity.Role">
+<mapper namespace="com.ding.crowd.mapper.AuthMapper">
+  <resultMap id="BaseResultMap" type="com.ding.crowd.entity.Auth">
     <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="name" jdbcType="CHAR" property="name" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="title" jdbcType="VARCHAR" property="title" />
+    <result column="category_id" jdbcType="INTEGER" property="categoryId" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -64,37 +66,32 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, name
+    id, name, title, category_id
   </sql>
 
-  <!--查询对应adminId的未被分配的Role-->
-  <select id="selectUnAssignedRole" resultMap="BaseResultMap">
-    select id,name
-    from t_role
-    where
-        id not in (select role_id from inner_admin_role where admin_id = #{adminId})
+  <!--通过roleId删除inner_role_auth表中旧的关系-->
+  <delete id="deleteOldRelationshipByRoleId">
+    delete from inner_role_auth where
+      role_id = #{roleId}
+  </delete>
+
+  <!--向inner_role_auth表中插入新的关系-->
+  <insert id="insertNewRelationship">
+    insert into inner_role_auth(role_id, auth_id) values
+    <foreach collection="authIdList" item="authId" separator=",">
+      (#{roleId},#{authId})
+    </foreach>
+  </insert>
+  <select id="getAssignedAuthIdByRoleId" resultType="int">
+    select auth_id from inner_role_auth where role_id = #{roleId}
   </select>
-  <!--查询对应adminId的已被分配的Role-->
-  <select id="selectAssignedRole" resultMap="BaseResultMap">
-    select id,name
-    from t_role
-    where
-      id in (select role_id from inner_admin_role where admin_id = #{adminId})
-  </select>
-  <!--查询所有匹配的role信息，用于分页显示-->
-  <select id="selectRoleByKeyword" resultMap="BaseResultMap">
-    select id,name
-    from t_role
-    where
-      name like CONCAT("%",#{keyword},"%")
-  </select>
-  <select id="selectByExample" parameterType="com.ding.crowd.entity.RoleExample" resultMap="BaseResultMap">
+  <select id="selectByExample" parameterType="com.ding.crowd.entity.AuthExample" resultMap="BaseResultMap">
     select
     <if test="distinct">
       distinct
     </if>
     <include refid="Base_Column_List" />
-    from t_role
+    from t_auth
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
@@ -105,25 +102,27 @@
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
-    from t_role
+    from t_auth
     where id = #{id,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    delete from t_role
+    delete from t_auth
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <delete id="deleteByExample" parameterType="com.ding.crowd.entity.RoleExample">
-    delete from t_role
+  <delete id="deleteByExample" parameterType="com.ding.crowd.entity.AuthExample">
+    delete from t_auth
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.ding.crowd.entity.Role">
-    insert into t_role (id, name)
-    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=CHAR})
+  <insert id="insert" parameterType="com.ding.crowd.entity.Auth">
+    insert into t_auth (id, name, title, 
+      category_id)
+    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR}, 
+      #{categoryId,jdbcType=INTEGER})
   </insert>
-  <insert id="insertSelective" parameterType="com.ding.crowd.entity.Role">
-    insert into t_role
+  <insert id="insertSelective" parameterType="com.ding.crowd.entity.Auth">
+    insert into t_auth
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
         id,
@@ -131,30 +130,48 @@
       <if test="name != null">
         name,
       </if>
+      <if test="title != null">
+        title,
+      </if>
+      <if test="categoryId != null">
+        category_id,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
         #{id,jdbcType=INTEGER},
       </if>
       <if test="name != null">
-        #{name,jdbcType=CHAR},
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null">
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="categoryId != null">
+        #{categoryId,jdbcType=INTEGER},
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="com.ding.crowd.entity.RoleExample" resultType="java.lang.Long">
-    select count(*) from t_role
+  <select id="countByExample" parameterType="com.ding.crowd.entity.AuthExample" resultType="java.lang.Long">
+    select count(*) from t_auth
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </select>
   <update id="updateByExampleSelective" parameterType="map">
-    update t_role
+    update t_auth
     <set>
       <if test="record.id != null">
         id = #{record.id,jdbcType=INTEGER},
       </if>
       <if test="record.name != null">
-        name = #{record.name,jdbcType=CHAR},
+        name = #{record.name,jdbcType=VARCHAR},
+      </if>
+      <if test="record.title != null">
+        title = #{record.title,jdbcType=VARCHAR},
+      </if>
+      <if test="record.categoryId != null">
+        category_id = #{record.categoryId,jdbcType=INTEGER},
       </if>
     </set>
     <if test="_parameter != null">
@@ -162,25 +179,35 @@
     </if>
   </update>
   <update id="updateByExample" parameterType="map">
-    update t_role
+    update t_auth
     set id = #{record.id,jdbcType=INTEGER},
-      name = #{record.name,jdbcType=CHAR}
+      name = #{record.name,jdbcType=VARCHAR},
+      title = #{record.title,jdbcType=VARCHAR},
+      category_id = #{record.categoryId,jdbcType=INTEGER}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="com.ding.crowd.entity.Role">
-    update t_role
+  <update id="updateByPrimaryKeySelective" parameterType="com.ding.crowd.entity.Auth">
+    update t_auth
     <set>
       <if test="name != null">
-        name = #{name,jdbcType=CHAR},
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null">
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="categoryId != null">
+        category_id = #{categoryId,jdbcType=INTEGER},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.ding.crowd.entity.Role">
-    update t_role
-    set name = #{name,jdbcType=CHAR}
+  <update id="updateByPrimaryKey" parameterType="com.ding.crowd.entity.Auth">
+    update t_auth
+    set name = #{name,jdbcType=VARCHAR},
+      title = #{title,jdbcType=VARCHAR},
+      category_id = #{categoryId,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

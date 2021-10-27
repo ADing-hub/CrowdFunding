@@ -1,6 +1,7 @@
 package com.ding.crowd.service.api;
 
 import com.ding.crowd.entity.Admin;
+import com.ding.crowd.entity.Role;
 import com.github.pagehelper.PageInfo;
 
 import java.util.List;
@@ -57,4 +58,6 @@ public interface AdminService {
      * @param admin admin对象
      */
     void update(Admin admin);
+
+    void saveAdminRoleRlationship(Integer adminId, List<Integer> roleIdList);
 }

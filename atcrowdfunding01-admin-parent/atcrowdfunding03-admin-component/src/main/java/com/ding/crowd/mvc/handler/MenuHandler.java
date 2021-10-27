@@ -4,14 +4,11 @@ import com.ding.crowd.entity.Menu;
 import com.ding.crowd.service.api.MenuService;
 import com.ding.crowd.util.ResultEntity;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * @author Qidong Ding
@@ -20,14 +17,13 @@ import java.util.Objects;
  * @since JDK 1.8
  */
 
-@Controller
+@RestController
 public class MenuHandler {
 
     @Autowired
     private MenuService menuService;
 
-    @ResponseBody
-    @RequestMapping("/menu/do/get.json")
+    @RequestMapping("menu/get/whole/tree.json")
     public ResultEntity<Menu> getWholeTreeNew() {
         // 查出所有的Menu对象
         List<Menu> menuList = menuService.getAll();
@@ -54,12 +50,11 @@ public class MenuHandler {
             Menu father = menuHashMapp.get(pid);
             // 将当前节点存入父节点
             father.getChildren().add(menu);
-
         }
         return ResultEntity.successWithData(root);
     }
 
-    public ResultEntity<Menu> getWholeTreeOld() {
+    /*public ResultEntity<Menu> getWholeTreeOld() {
         // 查出所有的Menu对象
         List<Menu> menuList = menuService.getAll();
         // 声明一个变量用来存储找到的根节点
@@ -90,5 +85,24 @@ public class MenuHandler {
         }
         // 将组装好的树形结构，返回给浏览器
         return ResultEntity.successWithData(root);
+    }*/
+
+
+    @RequestMapping("menu/save.json")
+    public ResultEntity<Menu> save(Menu menu) {
+        menuService.save(menu);
+        return ResultEntity.successWithoutData();
+    }
+
+    @RequestMapping("menu/update.json")
+    public ResultEntity<Menu> update(Menu menu) {
+        menuService.update(menu);
+        return ResultEntity.successWithoutData();
+    }
+
+    @RequestMapping("menu/remove.json")
+    public ResultEntity<Menu> remove(Integer id) {
+        menuService.remove(id);
+        return ResultEntity.successWithoutData();
     }
 }
