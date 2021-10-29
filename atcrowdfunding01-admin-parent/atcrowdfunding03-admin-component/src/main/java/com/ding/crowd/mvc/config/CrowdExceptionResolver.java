@@ -37,7 +37,7 @@ public class CrowdExceptionResolver {
      */
     @ExceptionHandler(value = LoginAcctAlreadyInUserForUpdateException.class)
     public ModelAndView LoginAcctAlreadyInUserForUpdateException(LoginAcctAlreadyInUserForUpdateException exception, HttpServletRequest request, HttpServletResponse response) throws IOException {
-        String viewName = "system-error";
+        String viewName = "admin-login";
         return commonResolve(viewName, exception, request, response);
     }
 

@@ -18,4 +18,8 @@ public interface AuthService {
     List<Integer> getAssignedAuthIdByRoleId(Integer roleId);
 
     void savaRoleAuthRelathinShip(Map<String, List<Integer>> map);
+
+    List<String> getAssignedAuthNameByRoleId(Integer adminId);
+
+
 }

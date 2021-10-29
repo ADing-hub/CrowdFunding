@@ -60,4 +60,6 @@ public interface AdminService {
     void update(Admin admin);
 
     void saveAdminRoleRlationship(Integer adminId, List<Integer> roleIdList);
+
+    Admin getAdminByLoginAcct(String s);
 }

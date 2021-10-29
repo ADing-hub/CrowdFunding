@@ -69,6 +69,17 @@
     id, name, title, category_id
   </sql>
 
+  <!-- 通过admin的id得到auth的name -->
+  <select id="selectAssignedAuthNameByRoleId" resultType="string">
+    SELECT
+      DISTINCT t_auth.name
+    from t_auth
+           LEFT JOIN inner_role_auth ON inner_role_auth.auth_id = t_auth.id
+           LEFT JOIN inner_admin_role ON inner_admin_role.role_id = inner_role_auth.role_id
+    WHERE inner_admin_role.admin_id = #{adminId}
+      AND t_auth.name != "" and t_auth.name IS NOT NULL
+  </select>
+
   <!--通过roleId删除inner_role_auth表中旧的关系-->
   <delete id="deleteOldRelationshipByRoleId">
     delete from inner_role_auth where

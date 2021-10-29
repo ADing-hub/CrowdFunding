@@ -24,7 +24,7 @@
             <props>
                 <!-- Key属性指定异常全类名-->
                 <!-- 标签体中写对应的视图（要拼前后缀）-->
-                <prop key="java.lang.Exception">system.error</prop>
+                <prop key="java.lang.Exception">admin-login</prop>
             </props>
         </property>
     </bean>
@@ -44,7 +44,7 @@
 
 
     <!-- 注册拦截器-->
-    <mvc:interceptors>
+    <!--<mvc:interceptors>
         <mvc:interceptor>
             <mvc:mapping path="/**"/>
             <mvc:exclude-mapping path="/admin/do/login.html"/>
@@ -52,5 +52,5 @@
             <mvc:exclude-mapping path="/admin/do/logout.html"/>
             <bean class="com.ding.crowd.mvc.interceptor.LoginInterceptor"/>
         </mvc:interceptor>
-    </mvc:interceptors>
+    </mvc:interceptors>-->
 </beans>
