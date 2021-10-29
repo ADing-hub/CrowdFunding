@@ -183,6 +183,7 @@ public class AdminServiceImpl implements AdminService {
     public Admin getAdminByLoginAcct(String s) {
         AdminExample adminExample = new AdminExample();
         AdminExample.Criteria criteria = adminExample.createCriteria();
+        criteria.andLoginAcctEqualTo(s);
         List<Admin> admins = adminMapper.selectByExample(adminExample);
         Admin admin = admins.get(0);
         return admin;

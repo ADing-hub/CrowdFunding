@@ -56,6 +56,8 @@ public class WebAppSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()                     // 表示对请求进行授权
                 .antMatchers(permitUrls)                 // 传入的ant风格的url
                 .permitAll()                             // 允许上面的所有请求，不需要认证
+                .antMatchers("/admin/get/page.html")  // 针对分页显示Admin数据设定访问控制
+                .hasRole("经理")                              // 要求具备经理角色
                 .anyRequest()                             // 设置其他未设置的全部请求
                 .authenticated()                          // 表示需要认证
                 .and()
