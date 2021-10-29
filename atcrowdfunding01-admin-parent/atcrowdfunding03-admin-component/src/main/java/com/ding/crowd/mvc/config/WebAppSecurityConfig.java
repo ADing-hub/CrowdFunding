@@ -28,15 +28,8 @@ public class WebAppSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private UserDetailsService userDetailsService;
-
-    /**
-     * 告诉Security 密码不加密
-     * @return
-     */
-    @Bean
-    PasswordEncoder passwordEncoder() {
-        return NoOpPasswordEncoder.getInstance();
-    }
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -47,7 +40,9 @@ public class WebAppSecurityConfig extends WebSecurityConfigurerAdapter {
                 .roles("ADMIN")
         ;*/
 
-        auth.userDetailsService(userDetailsService);
+        auth
+                .userDetailsService(userDetailsService)
+                .passwordEncoder(bCryptPasswordEncoder);
 
     }
 

@@ -16,6 +16,8 @@
     <context:property-placeholder location="classpath:jdbc.properties"/>
     <!-- 配置自动扫描的包：主要是为了把Service扫描到IOC容器中-->
     <context:component-scan base-package="com.ding.crowd.service"/>
+    <context:component-scan base-package="com.ding.crowd.mvc.config"/>
+    <context:component-scan base-package="com.ding.crowd.mvc.interceptor"/>
 
     <!-- 配置数据源-->
     <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource">
@@ -101,5 +103,9 @@
             <tx:method name="batch*" propagation="REQUIRES_NEW" rollback-for="java.lang.Exception"/>
         </tx:attributes>
     </tx:advice>
+
+    <!-- 配置 BCryptPasswordEncoder -->
+    <bean id="bCryptPasswordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
+
 
 </beans>

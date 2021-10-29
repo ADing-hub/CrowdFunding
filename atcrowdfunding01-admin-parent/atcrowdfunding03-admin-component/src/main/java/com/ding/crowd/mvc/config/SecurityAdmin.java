@@ -28,6 +28,8 @@ public class SecurityAdmin extends User {
         super(orgadmin.getUserName(), orgadmin.getUserPswd(), authorities);
         // 给原始admin赋值
         this.orgadmin = orgadmin;
+        this.orgadmin.setUserPswd(null);
+
     }
 
     // 对外提供获取原始Admin对象的get方法

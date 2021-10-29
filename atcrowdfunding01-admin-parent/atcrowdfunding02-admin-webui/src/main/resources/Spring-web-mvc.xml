@@ -6,7 +6,7 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/mvc https://www.springframework.org/schema/mvc/spring-mvc.xsd">
 
     <!-- 配置自动扫描：扫描handler-->
-    <context:component-scan base-package="com.ding.crowd.mvc"/>
+    <context:component-scan base-package="com.ding.crowd.mvc.handler"/>
 
     <!-- 配置-SpiringMVC注解驱动-->
     <mvc:annotation-driven/>

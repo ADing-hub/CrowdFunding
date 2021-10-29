@@ -14,6 +14,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
@@ -34,6 +35,9 @@ public class AdminServiceImpl implements AdminService {
     @Autowired
     private AdminMapper adminMapper;
 
+     @Autowired
+     private BCryptPasswordEncoder bCryptPasswordEncoder;
+
     /**
      * 保存admin对象@Override
      *
@@ -42,8 +46,11 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public void saveAdmin(Admin admin) {
         // 1、密码加密
-        String md5 = CrowdUtil.md5(admin.getUserPswd());
-        admin.setUserPswd(md5);
+//        String md5 = CrowdUtil.md5(admin.getUserPswd());
+//        admin.setUserPswd(md5);
+        String userPswd = admin.getUserPswd();
+        String encode = bCryptPasswordEncoder.encode(userPswd);
+        admin.setUserPswd(encode);
         // 2、生成创建时间
         Date date = new Date();
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -58,7 +65,6 @@ public class AdminServiceImpl implements AdminService {
                 throw new LoginAcctAlreadyInUserException(CrowdContant.MESSAGE_LOGIN_ACCT_ALREADY_IN_USE);
             }
         }
-
     }
 
     @Override
