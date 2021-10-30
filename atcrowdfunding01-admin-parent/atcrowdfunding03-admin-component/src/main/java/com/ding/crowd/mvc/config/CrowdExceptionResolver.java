@@ -63,8 +63,8 @@ public class CrowdExceptionResolver {
      * @return 返回页面
      * @ExceptionHandler：将一个具体的异常类型和一个方法关联起来
      */
-    @ExceptionHandler(value = AccessForbiddenException.class)
-    public ModelAndView AccessForbiddenException(AccessForbiddenException exception, HttpServletRequest request, HttpServletResponse response) throws IOException {
+    @ExceptionHandler(value = Exception.class)
+    public ModelAndView AccessForbiddenException(Exception exception, HttpServletRequest request, HttpServletResponse response) throws IOException {
         String viewName = "admin-login";
         return commonResolve(viewName, exception, request, response);
     }

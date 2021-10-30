@@ -5,6 +5,7 @@ import com.ding.crowd.service.api.RoleService;
 import com.ding.crowd.util.ResultEntity;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,6 +27,7 @@ public class RoleHandler {
     @Autowired
     RoleService roleService;
 
+    @PreAuthorize("hasRole('部长')")
     @ResponseBody
     @RequestMapping("/role/get/page/info.json")
     public ResultEntity<PageInfo<Role>> getPageInfo(@RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum,
